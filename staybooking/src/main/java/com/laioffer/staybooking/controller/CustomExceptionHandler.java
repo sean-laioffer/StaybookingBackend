@@ -1,5 +1,6 @@
 package com.laioffer.staybooking.controller;
 
+import com.laioffer.staybooking.exception.GCSUploadException;
 import com.laioffer.staybooking.exception.StayNotExistException;
 import com.laioffer.staybooking.exception.UserAlreadyExistException;
 import com.laioffer.staybooking.exception.UserNotExistException;
@@ -25,5 +26,10 @@ public class CustomExceptionHandler {
     @ExceptionHandler(StayNotExistException.class)
     public final ResponseEntity<String> handleStayNotExistExceptions(Exception ex, WebRequest request) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(GCSUploadException.class)
+    public final ResponseEntity<String> handleGCSUploadExceptions(Exception ex, WebRequest request) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
