@@ -1,9 +1,11 @@
 package com.laioffer.staybooking.service;
 
 import com.laioffer.staybooking.exception.StayNotExistException;
+import com.laioffer.staybooking.model.Location;
 import com.laioffer.staybooking.model.Stay;
 import com.laioffer.staybooking.model.StayImage;
 import com.laioffer.staybooking.model.User;
+import com.laioffer.staybooking.repository.LocationRepository;
 import com.laioffer.staybooking.repository.StayRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,11 +22,15 @@ import java.util.stream.Collectors;
 public class StayService {
     private StayRepository stayRepository;
     private ImageStorageService imageStorageService;
+    private LocationRepository locationRepository;
+    private GeoCodingService geoCodingService;
 
     @Autowired
-    public StayService(StayRepository stayRepository, ImageStorageService imageStorageService) {
+    public StayService(StayRepository stayRepository, ImageStorageService imageStorageService, LocationRepository locationRepository, GeoCodingService geoCodingService) {
         this.stayRepository = stayRepository;
         this.imageStorageService = imageStorageService;
+        this.locationRepository = locationRepository;
+        this.geoCodingService = geoCodingService;
     }
 
 
@@ -47,8 +53,10 @@ public class StayService {
             stayImages.add(new StayImage(mediaLink, stay));
         }
         stay.setImages(stayImages);
-
         stayRepository.save(stay);
+
+        Location location = geoCodingService.getLatLng(stay.getId(), stay.getAddress());
+        locationRepository.save(location);
     }
 
     @Transactional(isolation = Isolation.SERIALIZABLE)

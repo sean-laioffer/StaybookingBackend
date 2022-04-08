@@ -34,4 +34,14 @@ public class CustomExceptionHandler {
     public final ResponseEntity<String> handleInvalidSearchDateExceptions(Exception ex, WebRequest request) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(GeoCodingException.class)
+    public final ResponseEntity<String> handleGeoCodingExceptions(Exception ex, WebRequest request) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(InvalidStayAddressException.class)
+    public final ResponseEntity<String> handleInvalidStayAddressExceptions(Exception ex, WebRequest request) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 }
